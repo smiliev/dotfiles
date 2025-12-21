@@ -38,6 +38,29 @@ wallpaper_path = '~/.config/qtile/wallpapers/world-of-warcraft-classic-raid-uhd-
 def spawn_dmenu(qtile):
     qtile.spawn(f"j4-dmenu-desktop --dmenu='dmenu -m {qtile.current_screen.index} -i -fn \"TerminessTTF Nerd Font:size=16\" -nb \"#000000\" -nf \"#ffffff\" -sf \"#ffffff\"'")
 
+def swap_screens(qtile):
+    if len(qtile.screens) < 2:
+        return
+    
+    s1 = qtile.screens[0]
+    s2 = qtile.screens[1]
+    g1 = s1.group
+    g2 = s2.group
+    
+    # Perform the swap
+    s1.set_group(g2)
+    s2.set_group(g1)
+
+    focus_current_screen(qtile)
+
+def focus_current_screen(qtile):
+    # Get the index of the currently focused screen
+    current_index = qtile.current_screen.index
+    other_index = 1 - current_index
+
+    qtile.to_screen(other_index)
+    qtile.to_screen(current_index)
+
 keys = [
     # A list of available commands that can be bound to keys can be found
     # at https://docs.qtile.org/en/latest/manual/config/lazy.html
@@ -71,6 +94,7 @@ keys = [
         desc="Toggle between split and unsplit sides of stack",
     ),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
+    Key([mod], "e", lazy.spawn("thunar"), desc="Launch Thunar file manager"),
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
@@ -94,8 +118,9 @@ keys = [
     Key([], "XF86AudioNext", lazy.spawn("playerctl next"), desc="Next track"),
     Key([], "XF86AudioPrev", lazy.spawn("playerctl previous"), desc="Previous track"),
     # Focus screens
-    Key([mod], "z", lazy.to_screen(1)),  # HDMI-A-0 (physically left monitor)
-    Key([mod], "x", lazy.to_screen(0)),  # DisplayPort-0 (physically right monitor, primary)
+    Key([mod], "z", lazy.to_screen(1), lazy.function(focus_current_screen), desc="Focus left screen"),
+    Key([mod], "x", lazy.to_screen(0), lazy.function(focus_current_screen), desc="Focus right screen"),
+    Key([mod], "s", lazy.function(swap_screens), desc="Swap workspaces between screens"),
 
     Key(["shift"], "Alt_L", lazy.widget["keyboardlayout"].next_keyboard(), desc="Next keyboard layout."),
 ]
@@ -119,7 +144,7 @@ groups = [Group(i) for i in "123456789"]
 for i in groups:
     keys.extend([
         # mod1 + letter of group = switch to group
-        Key([mod], i.name, lazy.group[i.name].toscreen(),
+        Key([mod], i.name, lazy.group[i.name].toscreen(), lazy.function(focus_current_screen),
             desc="Switch to group {}".format(i.name)),
 	
         # mod1 + shift + letter of group = move focused window to group
