@@ -33,6 +33,10 @@ import subprocess
 
 mod = "mod4"
 terminal = guess_terminal()
+wallpaper_path = '~/.config/qtile/wallpapers/world-of-warcraft-classic-raid-uhd-4k-wallpaper.jpg'
+
+def spawn_dmenu(qtile):
+    qtile.spawn(f"j4-dmenu-desktop --dmenu='dmenu -m {qtile.current_screen.index} -i -fn \"TerminessTTF Nerd Font:size=16\" -nb \"#000000\" -nf \"#ffffff\" -sf \"#ffffff\"'")
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -80,7 +84,7 @@ keys = [
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
-    Key([mod], "d", lazy.spawn("j4-dmenu-desktop --dmenu='dmenu -i -fn \"TerminessTTF Nerd Font:size=16\" -nb \"#000000\" -nf \"#ffffff\" -sf \"#ffffff\"'"), desc="Launch j4-dmenu-desktop"),
+    Key([mod], "d", lazy.function(spawn_dmenu), desc="Launch dmenu on current screen"),
     # Volume control keys
     Key([], "XF86AudioRaiseVolume", lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ +2%"), desc="Increase volume"),
     Key([], "XF86AudioLowerVolume", lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ -2%"), desc="Decrease volume"),
@@ -90,8 +94,8 @@ keys = [
     Key([], "XF86AudioNext", lazy.spawn("playerctl next"), desc="Next track"),
     Key([], "XF86AudioPrev", lazy.spawn("playerctl previous"), desc="Previous track"),
     # Focus screens
-    Key([mod], "x", lazy.to_screen(1)),
-    Key([mod], "z", lazy.to_screen(0)),
+    Key([mod], "z", lazy.to_screen(1)),  # HDMI-A-0 (physically left monitor)
+    Key([mod], "x", lazy.to_screen(0)),  # DisplayPort-0 (physically right monitor, primary)
 
     Key(["shift"], "Alt_L", lazy.widget["keyboardlayout"].next_keyboard(), desc="Next keyboard layout."),
 ]
@@ -149,6 +153,8 @@ extension_defaults = widget_defaults.copy()
 
 screens = [
     Screen(
+        wallpaper=wallpaper_path,
+        wallpaper_mode='fill',
         top=bar.Bar(
             [
                 widget.GroupBox(),
@@ -200,6 +206,8 @@ screens = [
         # x11_drag_polling_rate = 60,
     ),
     Screen(
+        wallpaper=wallpaper_path,
+        wallpaper_mode='fill',
         top=bar.Bar(
             [
                 widget.GroupBox(),
