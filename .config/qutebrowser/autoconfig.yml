@@ -6,61 +6,7 @@
 
 config_version: 2
 settings:
-  auto_save.session:
-    global: true
-  bindings.commands:
-    global:
-      normal:
-        J: tab-prev
-        K: tab-next
-        R: adblock-update ;; reload -f
-        r: reload
   colors.webpage.darkmode.algorithm:
     global: lightness-cielab
   colors.webpage.darkmode.enabled:
     global: false
-  colors.webpage.darkmode.threshold.background:
-    global: 0
-  colors.webpage.preferred_color_scheme:
-    global: dark
-  confirm_quit:
-    global:
-    - multiple-tabs
-    - downloads
-  content.autoplay:
-    global: false
-  content.blocking.method:
-    global: both
-  content.geolocation:
-    global: false
-    https://tinder.com: true
-    https://www.google.com: false
-    https://www.olx.bg: false
-  content.javascript.clipboard:
-    global: access
-  content.media.audio_capture:
-    https://discord.com: true
-  content.notifications.enabled:
-    global: false
-    https://www.reddit.com: false
-    https://www.tiktok.com: false
-  content.register_protocol_handler:
-    https://mail.google.com?extsrc=mailto&url=%25s: false
-  content.webrtc_ip_handling_policy:
-    global: default-public-interface-only
-  downloads.open_dispatcher:
-    global: null
-  fonts.default_family:
-    global: TerminessTTF Nerd Font
-  fonts.default_size:
-    global: 12pt
-  input.insert_mode.auto_leave:
-    global: false
-  input.insert_mode.auto_load:
-    global: true
-  input.media_keys:
-    global: false
-  scrolling.smooth:
-    global: false
-  tabs.select_on_remove:
-    global: next

@@ -376,7 +376,11 @@ c.fonts.default_size = '12pt'
 # Bindings for normal mode
 config.bind('J', 'tab-prev')
 config.bind('K', 'tab-next')
-config.bind('R', 'reload -f ;; adblock-update')
+config.bind('R', 'adblock-update ;; reload -f')
 config.bind('r', 'reload')
 
-# config.set('content.drm', True)
+# Workaround for Bulgarian Phonetic keyboard
+config.unbind('.')
+en_keys = "qwertyuiop[]asdfghjkl;'zxcvbnm,./"+'QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>?'
+bg_keys = "чшертъуиопящасдфгхйкл;'зжцвбнм,./"+'ЧШЕРТЪУИОПЯЩАСДФГХЙКЛ:"ЗЖЦВБНМ„“?'
+c.bindings.key_mappings.update(dict(zip(bg_keys, en_keys)))
