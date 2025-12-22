@@ -6,7 +6,20 @@
 
 config_version: 2
 settings:
-  colors.webpage.darkmode.algorithm:
-    global: lightness-cielab
-  colors.webpage.darkmode.enabled:
-    global: false
+  bindings.commands:
+    global:
+      normal:
+        .: null
+        <Alt+o>: download-open
+        <Ctrl+Alt+j>: cmd-run-with-count 3 scroll down
+        <Ctrl+Alt+k>: cmd-run-with-count 3 scroll up
+        <Ctrl+Shift+j>: cmd-run-with-count 3 scroll down
+        <Ctrl+j>: cmd-run-with-count 2 scroll down
+        <Ctrl+k>: cmd-run-with-count 2 scroll up
+        J: tab-prev
+        K: tab-next
+        R: adblock-update ;; reload -f
+        j: scroll down
+        r: reload
+  scrolling.smooth:
+    global: true
