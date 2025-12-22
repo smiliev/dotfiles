@@ -1,0 +1,5 @@
+# Workaround for Bulgarian Phonetic keyboard
+config.unbind('.')
+en_keys = "qwertyuiop[]asdfghjkl;'zxcvbnm,./"+'QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>?'
+bg_keys = "чшертъуиопящасдфгхйкл;'зжцвбнм,./"+'ЧШЕРТЪУИОПЯЩАСДФГХЙКЛ:"ЗЖЦВБНМ„“?'
+c.bindings.key_mappings.update(dict(zip(bg_keys, en_keys)))

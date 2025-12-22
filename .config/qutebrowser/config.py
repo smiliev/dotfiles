@@ -135,7 +135,7 @@ config.set('content.headers.accept_language', '', 'https://matchmaker.krunker.io
 # increased compatibility.  Note that the value read from JavaScript is
 # always the global value.
 # Type: FormatString
-config.set('content.headers.user_agent', 'Mozilla/5.0 ({os_info}; rv:144.0) Gecko/20100101 Firefox/144.0', 'https://accounts.google.com/*')
+config.set('content.headers.user_agent', 'Mozilla/5.0 ({os_info}; rv:145.0) Gecko/20100101 Firefox/145.0', 'https://accounts.google.com/*')
 
 # User agent to send.  The following placeholders are defined:  *
 # `{os_info}`: Something like "X11; Linux x86_64". * `{webkit_version}`:
@@ -284,7 +284,7 @@ c.input.media_keys = False
 # Enable smooth scrolling for web pages. Note smooth scrolling does not
 # work with the `:scroll-px` command.
 # Type: Bool
-c.scrolling.smooth = False
+c.scrolling.smooth = True
 
 # Which tab to select when the focused tab is removed.
 # Type: SelectOnRemove
@@ -292,7 +292,7 @@ c.scrolling.smooth = False
 #   - prev: Select the tab which came before the closed one (left in horizontal, above in vertical).
 #   - next: Select the tab which came after the closed one (right in horizontal, below in vertical).
 #   - last-used: Select the previously selected tab.
-c.tabs.select_on_remove = 'next'
+c.tabs.select_on_remove = 'last-used'
 
 # Search engines which can be used via the address bar.  Maps a search
 # engine name (such as `DEFAULT`, or `ddg`) to a URL with a `{}`
@@ -373,14 +373,30 @@ c.fonts.default_family = 'TerminessTTF Nerd Font'
 # Type: String
 c.fonts.default_size = '12pt'
 
+# Map keys to other keys, so that they are equivalent in all modes. When
+# the key used as dictionary-key is pressed, the binding for the key
+# used as dictionary-value is invoked instead. This is useful for global
+# remappings of keys, for example to map <Ctrl-[> to <Escape>. NOTE:
+# This should only be used if two keys should always be equivalent, i.e.
+# for things like <Enter> (keypad) and <Return> (non-keypad). For normal
+# command bindings, qutebrowser works differently to vim: You always
+# bind keys to commands, usually via `:bind` or `config.bind()`. Instead
+# of using this setting, consider finding the command a key is bound to
+# (e.g. via `:bind gg`) and then binding the same command to the desired
+# key. Note that when a key is bound (via `bindings.default` or
+# `bindings.commands`), the mapping is ignored.
+# Type: Dict
+c.bindings.key_mappings = {'<Ctrl+[>': '<Escape>', '<Ctrl+6>': '<Ctrl+^>', '<Ctrl+m>': '<Return>', '<Ctrl+j>': '<Return>', '<Ctrl+i>': '<Tab>', '<Shift+Return>': '<Return>', '<Enter>': '<Return>', '<Shift+Enter>': '<Return>', '<Ctrl+Enter>': '<Ctrl+Return>', '<Ч>': 'q', '<Ш>': 'w', '<Е>': 'e', '<Р>': 'r', '<Т>': 't', '<Ъ>': 'y', '<У>': 'u', '<И>': 'i', '<О>': 'o', '<П>': 'p', '<Я>': '[', '<Щ>': ']', '<А>': 'a', '<С>': 's', '<Д>': 'd', '<Ф>': 'f', '<Г>': 'g', '<Х>': 'h', '<Й>': 'j', '<К>': 'k', '<Л>': 'l', ';': ';', "'": "'", '<З>': 'z', '<Ж>': 'x', '<Ц>': 'c', '<В>': 'v', '<Б>': 'b', '<Н>': 'n', '<М>': 'm', ',': ',', '.': '.', '/': '/', '<Shift+Ч>': 'Q', '<Shift+Ш>': 'W', '<Shift+Е>': 'E', '<Shift+Р>': 'R', '<Shift+Т>': 'T', '<Shift+Ъ>': 'Y', '<Shift+У>': 'U', '<Shift+И>': 'I', '<Shift+О>': 'O', '<Shift+П>': 'P', '<Shift+Я>': '{', '<Shift+Щ>': '}', '<Shift+А>': 'A', '<Shift+С>': 'S', '<Shift+Д>': 'D', '<Shift+Ф>': 'F', '<Shift+Г>': 'G', '<Shift+Х>': 'H', '<Shift+Й>': 'J', '<Shift+К>': 'K', '<Shift+Л>': 'L', ':': ':', '"': '"', '<Shift+З>': 'Z', '<Shift+Ж>': 'X', '<Shift+Ц>': 'C', '<Shift+В>': 'V', '<Shift+Б>': 'B', '<Shift+Н>': 'N', '<Shift+М>': 'M', '<„>': '<', '<“>': '>', '?': '?'}
+
 # Bindings for normal mode
+config.unbind('.')
+config.bind('<Alt+o>', 'download-open')
+config.bind('<Ctrl+Alt+j>', 'cmd-run-with-count 3 scroll down')
+config.bind('<Ctrl+Alt+k>', 'cmd-run-with-count 3 scroll up')
+config.bind('<Ctrl+Shift+j>', 'cmd-run-with-count 3 scroll down')
+config.bind('<Ctrl+j>', 'cmd-run-with-count 2 scroll down')
+config.bind('<Ctrl+k>', 'cmd-run-with-count 2 scroll up')
 config.bind('J', 'tab-prev')
 config.bind('K', 'tab-next')
 config.bind('R', 'adblock-update ;; reload -f')
 config.bind('r', 'reload')
-
-# Workaround for Bulgarian Phonetic keyboard
-config.unbind('.')
-en_keys = "qwertyuiop[]asdfghjkl;'zxcvbnm,./"+'QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>?'
-bg_keys = "чшертъуиопящасдфгхйкл;'зжцвбнм,./"+'ЧШЕРТЪУИОПЯЩАСДФГХЙКЛ:"ЗЖЦВБНМ„“?'
-c.bindings.key_mappings.update(dict(zip(bg_keys, en_keys)))
