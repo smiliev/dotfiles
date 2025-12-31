@@ -31,6 +31,8 @@ from libqtile.utils import guess_terminal
 import os
 import subprocess
 
+from libqtile.core.manager import Qtile
+
 mod = "mod4"
 terminal = guess_terminal()
 wallpaper_path = '~/.config/qtile/wallpapers/world-of-warcraft-classic-raid-uhd-4k-wallpaper.jpg'
@@ -301,3 +303,56 @@ wmname = "LG3D"
 def autostart():
     home = os.path.expanduser('~/.config/qtile/autostart.sh')
     subprocess.call([home])
+
+# 1. Fix the focus_screen order
+def fixed_focus_screen(self, n, warp=True):
+    if n >= len(self.screens):
+        return
+    old = self.current_screen
+    self.current_screen = self.screens[n]
+    if old != self.current_screen:
+        hook.fire("current_screen_change")
+        hook.fire("setgroup")
+        # Change: focus NEW group first, then re-layout OLD group
+        self.current_group.focus(self.current_window, warp)
+        old.group.layout_all()
+        if self.current_window is None and warp:
+            self.warp_to_screen()
+
+Qtile.focus_screen = fixed_focus_screen
+
+# 2. Fix the Screen.set_group swap logic
+def fixed_set_group(self, new_group, save_prev=True, warp=True):
+    if new_group is None:
+        return
+    if new_group.screen == self:
+        return
+    if save_prev and new_group is not self.group:
+        self.previous_group = self.group
+
+    if new_group.screen:
+        g1, s1 = self.group, self
+        g2, s2 = new_group, new_group.screen
+        with self.qtile.core.masked():
+            s2.group, s1.group = g1, g2
+            # Swap order based on which screen is currently focused
+            if s1 == self.qtile.current_screen:
+                g2.set_screen(s1, warp)
+                g1.set_screen(s2, warp)
+            else:
+                g1.set_screen(s2, warp)
+                g2.set_screen(s1, warp)
+    else:
+        # Standard non-swap logic
+        old_group = self.group
+        self.group = new_group
+        with self.qtile.core.masked():
+            new_group.set_screen(self, warp)
+            if old_group is not new_group:
+                old_group.set_screen(None, warp)
+    
+    hook.fire("setgroup")
+    hook.fire("focus_change")
+    hook.fire("layout_change", self.group.layouts[self.group.current_layout], self.group)
+
+Screen.set_group = fixed_set_group
