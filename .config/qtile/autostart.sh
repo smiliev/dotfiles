@@ -22,3 +22,5 @@ parcellite &
 #mictray &
 #pasystray &
 # picom &
+
+rclone mount siliev333drive: ~/gdrive --vfs-cache-mode full &
